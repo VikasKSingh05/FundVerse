@@ -109,8 +109,11 @@ export const StateContextProvider = ({ children }) => {
         "form from createCampaign",
         form
       );
-      await getCampaigns();
-      await getUserCampaigns(); // update user-specific campaigns right after a global refresh
+      // Wait for contract/node to index, then refresh lists
+      setTimeout(async () => {
+        await getCampaigns();
+        await getUserCampaigns();
+      }, 2000);
     } catch (error) {
       toast.error(" Error while creating Campaign, please 🙏🏻 try again", {
         position: "top-right",
@@ -296,7 +299,11 @@ export const StateContextProvider = ({ children }) => {
     setCampaigns(parsedCampaigns);
     // Immediately update user campaigns if address exists
     if (address) {
-      const filteredUser = parsedCampaigns?.filter((c) => c.owner === address);
+      const filteredUser = parsedCampaigns?.filter((c) => {
+        // log the addresses being compared
+        console.log("Comparing campaign.owner", c.owner, "to user address", address);
+        return c.owner?.toLowerCase() === address.toLowerCase();
+      });
       setUserCampaigns(filteredUser);
     }
     setIsLoading(false);
@@ -321,7 +328,11 @@ export const StateContextProvider = ({ children }) => {
   const getUserCampaigns = async () => {
     setIsLoading(true);
     const filteredCampaigns = campaigns?.filter(
-      (campaign) => campaign.owner === address
+      (campaign) => {
+        // log the addresses here, too
+        console.log("[UserCampaigns] campaign.owner:", campaign.owner, "address:", address);
+        return campaign.owner?.toLowerCase() === address.toLowerCase();
+      }
     );
     setUserCampaigns(filteredCampaigns);
     setIsLoading(false);
