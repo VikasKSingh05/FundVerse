@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import { useStateContext } from "../context";
-import { SmartSeva } from "../assets";
+// import { logo } from "../assets";
+import {SmartSeva} from "../assets";
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 
 const CENTER_LINKS = [
@@ -11,7 +12,7 @@ const CENTER_LINKS = [
 ];
 
 const Navbar = () => {
-  const { address, disconnect } = useStateContext();
+  const { address, disconnect, connectMetamask } = useStateContext();
   const [showDropdown, setShowDropdown] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const dropdownRef = useRef();
@@ -33,12 +34,12 @@ const Navbar = () => {
   }, [showDropdown]);
 
   return (
-    <nav className={`sticky top-0 z-40 w-full transition-all ${isScrolled ? "bg-white/60 dark:bg-[#19192a]/60 shadow-xl backdrop-blur-xl" : "bg-white/30 dark:bg-[#181824]/40"} py-4 flex items-center justify-between glass-card mb-[100px] px-10`} style={{ backdropFilter: "blur(15px)" }}>
-      {/* Logo (left) */}
+    <nav className={`sticky top-0 z-40 w-full transition-all ${isScrolled ? "bg-white/60 dark:bg-[#19192a]/60 shadow-xl backdrop-blur-xl" : "bg-white/30 dark:bg-[#181824]/40"} py-4 px-10 flex items-center justify-between glass-card`} style={{ backdropFilter: "blur(15px)" }}>
       <NavLink to="/" className="flex items-center shrink-0">
-        <img src={SmartSeva} alt="SmartSeva Logo" className="w-12 h-12 hover:scale-105 transition-transform rounded-full" />
+        <img src={SmartSeva} alt="SmartSeva Logo" className="w-12 h-12 hover:scale-105 transition-transform" />
+        <span className="text-2xl font-bold text-[#6F01Ec]">Smart</span>
+        <span className="text-2xl font-bold text-[#aeaeae]">Seva</span>
       </NavLink>
-      {/* Center nav links*/}
       <div className="hidden md:flex mx-auto gap-3">
         {CENTER_LINKS.map(({ name, route }) => (
           <NavLink
@@ -56,7 +57,6 @@ const Navbar = () => {
           </NavLink>
         ))}
       </div>
-      {/* User circle (right) */}
       <div className="relative shrink-0">
         <button
           className="w-12 h-12 rounded-full bg-[#dedede] dark:bg-[#2a2b43] flex items-center justify-center border-2 border-[#6F01Ec] transition-all focus:outline-none focus:ring-4 focus:ring-[#03dac597] overflow-hidden"
@@ -65,7 +65,6 @@ const Navbar = () => {
         >
           <Jazzicon diameter={46} seed={jsNumberForAddress(`${address || '0x0'}`)} />
         </button>
-        {/* Dropdown */}
         {showDropdown && (
           <div ref={dropdownRef} className="absolute right-0 mt-3 bg-white dark:bg-[#232336] min-w-[260px] rounded-xl shadow-2xl border border-[#ccccdf38] p-4 z-50 glass-card animate-fade-in-up">
             <div className="flex flex-col items-center gap-2">
@@ -76,19 +75,22 @@ const Navbar = () => {
             <div className="mt-5 flex flex-col gap-2">
               <NavLink
                 to="/profile"
-                className="w-full py-2 px-3 font-semibold glass-card transition hover:bg-[#6F01Ec] hover:text-black rounded text-center dark:text-white"
+                className="w-full py-2 px-3 font-semibold glass-card transition hover:bg-[#2ab7a9] hover:text-black rounded text-center dark:text-white"
                 onClick={() => setShowDropdown(false)}
               >
                 My Profile
               </NavLink>
               <button
-                className="w-full py-2 px-3 font-semibold glass-card transition hover:bg-[#e00b0b] hover:text-white rounded text-center dark:text-white"
+                className={`w-full py-2 px-3 font-semibold glass-card transition rounded text-center dark:text-white ${address ? 'hover:bg-[#e00b0b] hover:text-white' : 'hover:bg-[#03dac5] hover:text-black'}`}
                 onClick={() => {
                   setShowDropdown(false);
-                  setTimeout(disconnect, 150);
+                  setTimeout(() => {
+                    if (address) disconnect();
+                    else connectMetamask();
+                  }, 150);
                 }}
               >
-                Disconnect
+                {address ? 'Disconnect' : 'Connect'}
               </button>
             </div>
           </div>
