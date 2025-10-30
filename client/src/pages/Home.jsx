@@ -24,7 +24,7 @@ const Home = () => {
           handleClick={() => navigate("/create-campaign")}
         />
         <div className="mt-4 mb-1">
-          <h2 className="text-2xl font-bold text-[#03dac5] mb-3">Trending Campaigns</h2>
+          <div className="text-2xl font-bold text-[#03dac5] mb-20 uppercase">Trending Campaigns</div>
           {trendingCampaigns.length > 0 ? (
             <div className="flex flex-wrap gap-6 justify-center">
               {trendingCampaigns.map((c) => (

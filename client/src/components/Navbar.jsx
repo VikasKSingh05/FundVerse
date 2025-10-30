@@ -76,7 +76,7 @@ const Navbar = () => {
             <div className="mt-5 flex flex-col gap-2">
               <NavLink
                 to="/profile"
-                className="w-full py-2 px-3 font-semibold glass-card transition hover:bg-[#2ab7a9] hover:text-black rounded text-center dark:text-white"
+                className="w-full py-2 px-3 font-semibold glass-card transition hover:bg-[#6F01Ec] hover:text-black rounded text-center dark:text-white"
                 onClick={() => setShowDropdown(false)}
               >
                 My Profile
