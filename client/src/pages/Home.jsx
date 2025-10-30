@@ -131,11 +131,11 @@ const Home = () => {
           )}
         </div>
       </div>
-      <DisplayCampaigns
+      {/* <DisplayCampaigns
         title="All Campaigns"
         isLoading={isLoading}
         campaigns={validCampaigns}
-      />
+      /> */}
     </div>
   );
 };

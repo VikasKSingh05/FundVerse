@@ -4,6 +4,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Make root transparent so global background shows through */
+html, body, #root {
+  background: transparent;
+}
+
 @layer utilities {
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button {

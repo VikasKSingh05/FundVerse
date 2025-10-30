@@ -35,90 +35,108 @@ const ConnectWalletModal = ({ isProtectedRoute = false, isOpen = false, onClose:
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 backdrop-blur-sm">
-      <div className="w-full max-w-md rounded-2xl shadow-2xl bg-white dark:bg-[#1f2033] border border-white/10 p-5">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-xl font-bold bg-gradient-to-r from-[#6F01Ec] to-[#03dac5] bg-clip-text text-transparent">
-            Connect Wallet
-          </h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+      {/* Modal Card */}
+      <div className="w-full max-w-lg rounded-2xl border border-white/15 bg-gradient-to-br from-white/80 to-white/60 dark:from-[#1a1b2b]/90 dark:to-[#22233a]/90 shadow-[0_8px_40px_rgba(0,0,0,0.4)]">
+        {/* Header */}
+        <div className="p-5 border-b border-white/10 flex items-center justify-between">
+          <div>
+            <div className="text-sm tracking-widest text-[#ffffff]">SMARTSEVA</div>
+            <h2 className="text-xl font-extrabold bg-gradient-to-r from-[#6F01Ec] via-[#9b5cf6] to-[#03dac5] bg-clip-text text-transparent">Connect a wallet</h2>
+          </div>
           {!isProtectedRoute && (
-            <button onClick={onClose} className="px-3 py-1 rounded-md hover:bg-gray-300 dark:hover:bg-[#3a3b57] transition-colors text-sm">
-              Close
-            </button>
+            <button onClick={onClose} className="px-3 py-2 rounded-xl bg-white/60 dark:bg-white/10 text-sm text-white hover:bg-white/80 dark:hover:bg-white/20 transition-colors">Close</button>
           )}
-        </div>
-        <p className="text-sm text-gray-600 dark:text-gray-300 mb-6">
-          {connectionStatus === "connecting" ? "Connecting..." : "Choose your preferred wallet to get started"}
-        </p>
+        </div>  
 
-        {/* MetaMask */}
-        <div className="mb-4 p-4 rounded-xl bg-white/60 dark:bg-[#2b2c45]/60 hover:bg-white/80 dark:hover:bg-[#2b2c45]/80 transition-all border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <img src="https://metamask.io/images/metamask-fox.svg" alt="MetaMask" className="w-8 h-8" />
-              <div>
-                <div className="font-semibold">MetaMask</div>
-                <div className="text-xs text-gray-500">Popular</div>
+        {/* Body */}
+        <div className="p-5">
+          <p className="text-sm text-white dark:text-white mb-5">
+            {connectionStatus === "connecting" ? "Connecting to wallet…" : "Choose your preferred wallet to get started."}
+          </p>
+
+          {/* Wallet list */}
+          <div className="grid grid-cols-1 gap-3">
+            {/* MetaMask Card */}
+            <div className="group rounded-xl border border-white/15 bg-white/70 dark:bg-white/5 hover:bg-white/90 dark:hover:bg-white/10 transition-colors">
+              <div className="p-4 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  {/* <img src="https://metamask.io/images/metamask-fox.svg" alt="MetaMask" className="w-8 h-8" /> */}
+                  <div>
+                    <div className="font-semibold text-white">MetaMask</div>
+                    <div className="text-[11px] uppercase tracking-wide text-white">Popular</div>
+                  </div>
+                </div>
+                {hasMetaMask ? (
+                  <button
+                    onClick={handleMetaMask}
+                    className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#6F01Ec] to-[#03dac5] text-white font-semibold shadow hover:opacity-90 transition-opacity"
+                    disabled={connectionStatus === "connecting"}
+                  >
+                    {connectionStatus === "connecting" ? "Connecting…" : "Connect"}
+                  </button>
+                ) : (
+                  <a
+                    href={DOWNLOAD_METAMASK}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-4 py-2 rounded-lg bg-[#03dac5] text-black font-semibold shadow hover:opacity-90 transition-opacity"
+                  >
+                    Install
+                  </a>
+                )}
+              </div>
+              {!hasMetaMask && (
+                <div className="px-4 pb-4">
+                  <div className="mt-2 flex items-center gap-4 p-3 rounded-lg bg-gray-50/80 dark:bg-white/5">
+                    <img src={qrUrl} alt="Download MetaMask QR" className="w-24 h-24 rounded-md" />
+                    <div className="text-xs text-white dark:text-white">
+                      <div className="font-semibold mb-1">Get MetaMask</div>
+                      Scan to download the MetaMask app or visit their website, then return and press Connect.
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* WalletConnect (Coming soon) */}
+            <div className="opacity-60 cursor-not-allowed rounded-xl border border-white/15 bg-white/50 dark:bg-white/5">
+              <div className="p-4 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center">
+                    <span className="text-white font-bold">W</span>
+                  </div>
+                  <div>
+                    <div className="font-semibold text-white">WalletConnect</div>
+                    <div className="text-[11px] uppercase tracking-wide text-white">Coming soon</div>
+                  </div>
+                </div>
+                <button disabled className="px-4 py-2 rounded-lg bg-gray-300 dark:bg-white/10 text-gray-700 dark:text-white">Soon</button>
               </div>
             </div>
-            {hasMetaMask ? (
-              <button 
-                onClick={handleMetaMask} 
-                className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#6F01Ec] to-[#03dac5] text-white font-semibold hover:opacity-90 transition-opacity"
-                disabled={connectionStatus === "connecting"}
-              >
-                {connectionStatus === "connecting" ? "Connecting..." : "Connect"}
-              </button>
-            ) : (
-              <a href={DOWNLOAD_METAMASK} target="_blank" rel="noreferrer" className="px-4 py-2 rounded-lg bg-[#03dac5] text-black font-semibold hover:opacity-90 transition-opacity">
-                Install
-              </a>
-            )}
+
+            {/* Coinbase (Coming soon) */}
+            <div className="opacity-60 cursor-not-allowed rounded-xl border border-white/15 bg-white/50 dark:bg-white/5">
+              <div className="p-4 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center">
+                    <span className="text-white font-bold">C</span>
+                  </div>
+                  <div>
+                    <div className="font-semibold text-white">Coinbase Wallet</div>
+                    <div className="text-[11px] uppercase tracking-wide text-white">Coming soon</div>
+                  </div>
+                </div>
+                <button disabled className="px-4 py-2 rounded-lg bg-gray-300 dark:bg-white/10 text-gray-700 dark:text-white">Soon</button>
+              </div>
+            </div>
           </div>
-          {!hasMetaMask && (
-            <div className="mt-4 flex items-center gap-4 p-3 bg-gray-50 dark:bg-[#2b2c45] rounded-lg">
-              <img src={qrUrl} alt="Download MetaMask QR" className="w-24 h-24 rounded-md" />
-              <div className="text-sm text-gray-600 dark:text-gray-300">
-                <div className="font-medium mb-1">Get MetaMask</div>
-                <div className="text-xs">Scan to download MetaMask mobile app or visit MetaMask website</div>
-              </div>
-            </div>
-          )}
         </div>
 
-        {/* WalletConnect placeholder */}
-        <div className="mb-3 p-4 rounded-xl bg-white/40 dark:bg-[#2b2c45]/40 opacity-60 cursor-not-allowed border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center">
-                <span className="text-white font-bold">W</span>
-              </div>
-              <div>
-                <div className="font-semibold">WalletConnect</div>
-                <div className="text-xs text-gray-500">Coming Soon</div>
-              </div>
-            </div>
-            <button disabled className="px-4 py-2 rounded-lg bg-gray-300 dark:bg-[#3a3b57] text-gray-600">
-              Soon
-            </button>
-          </div>
-        </div>
-
-        {/* Coinbase placeholder */}
-        <div className="mb-1 p-4 rounded-xl bg-white/40 dark:bg-[#2b2c45]/40 opacity-60 cursor-not-allowed border border-gray-200 dark:border-gray-700">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center">
-                <span className="text-white font-bold">C</span>
-              </div>
-              <div>
-                <div className="font-semibold">Coinbase Wallet</div>
-                <div className="text-xs text-gray-500">Coming Soon</div>
-              </div>
-            </div>
-            <button disabled className="px-4 py-2 rounded-lg bg-gray-300 dark:bg-[#3a3b57] text-gray-600">
-              Soon
-            </button>
+        {/* Footer */}
+        <div className="px-5 pb-5">
+          <div className="text-[11px] text-white dark:text-white">
+            By connecting a wallet you agree to our Terms and acknowledge that your wallet address will be used to interact with the SmartSeva app.
           </div>
         </div>
       </div>
