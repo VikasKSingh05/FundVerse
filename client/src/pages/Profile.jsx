@@ -3,17 +3,26 @@ import { useStateContext } from "../context";
 import { DisplayCampaigns } from "../components";
 
 const Profile = () => {
-  const { address, contract, campaigns, getUserCampaigns, userCampaigns } = useStateContext();
+  const { address, contract, getUserCampaigns, userCampaigns } = useStateContext();
   const [loadingUser, setLoadingUser] = useState(false);
 
   useEffect(() => {
+    let isMounted = true; // prevents state updates after unmount
+
     const run = async () => {
-      setLoadingUser(true);
-      await getUserCampaigns();
-      setLoadingUser(false);
+      if (contract && address && isMounted) {
+        setLoadingUser(true);
+        await getUserCampaigns();
+        setLoadingUser(false);
+      }
     };
+
     run();
-  }, [contract, address, campaigns]);
+
+    return () => {
+      isMounted = false; // cleanup
+    };
+  }, [contract, address]); // ✅ removed 'campaigns' to prevent re-fetch loop
 
   return (
     <DisplayCampaigns
