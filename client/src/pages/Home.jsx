@@ -4,7 +4,7 @@ import { useStateContext } from "../context";
 import { DisplayCampaigns, CustomButton, ConnectWalletModal } from "../components";
 import { ChevronDown } from "lucide-react";
 import { SmartSeva } from "../assets";
-
+import blockchain from "../assets/blockchain.jpg";
 
 const isMeaningfulTitle = (titleRaw) => {
   if (typeof titleRaw !== "string") return false;
@@ -96,6 +96,8 @@ const Home = () => {
         <p className="text-lg md:text-xl text-gray-700 dark:text-[#e4e4e7] mb-10 mt-4 font-semibold">
           Fund projects that matter — powered by blockchain trust.
         </p>
+        <img src={blockchain} alt="blockchain" className="w-20 h-20 object-cover absolute top-20 right-[400px]" />
+        <img src={blockchain} alt="blockchain" className="w-20 h-20 object-cover absolute top-20 left-[400px]" />
         <div className="flex items-center gap-3">
           <CustomButton
             btnType="button"
