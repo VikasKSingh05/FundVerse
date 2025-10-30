@@ -326,16 +326,12 @@ export const StateContextProvider = ({ children }) => {
   };
 
   const getUserCampaigns = async () => {
-    setIsLoading(true);
-    const filteredCampaigns = campaigns?.filter(
-      (campaign) => {
-        // log the addresses here, too
-        console.log("[UserCampaigns] campaign.owner:", campaign.owner, "address:", address);
-        return campaign.owner?.toLowerCase() === address.toLowerCase();
-      }
+    const addr = address?.toLowerCase();
+    const filteredCampaigns = (campaigns || []).filter(
+      (campaign) => campaign.owner?.toLowerCase() === addr
     );
     setUserCampaigns(filteredCampaigns);
-    setIsLoading(false);
+    return filteredCampaigns;
   };
 
   return (

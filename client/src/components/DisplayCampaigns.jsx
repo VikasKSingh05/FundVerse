@@ -2,7 +2,6 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { loader } from "../assets";
 import FundCard from "./FundCard";
-import { v4 as uuidv4 } from "uuid";
 import { AnimatePresence, motion } from "framer-motion";
 
 const DisplayCampaigns = ({ title, isLoading, campaigns }) => {
@@ -38,7 +37,7 @@ const DisplayCampaigns = ({ title, isLoading, campaigns }) => {
           {!isLoading && campaigns?.length > 0 &&
             campaigns?.map((campaign) => (
               <motion.div
-                key={uuidv4()}
+                key={campaign.id}
                 initial={{ opacity: 0, scale: 0.96 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.92 }}
