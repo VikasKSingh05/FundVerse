@@ -7,20 +7,20 @@ const Home = () => {
   const { campaigns, isLoading } = useStateContext();
   const navigate = useNavigate();
 
-  // Optionally, filter trending by most funded, latest, or random for mock/demo
+  // filter trending by most funded, latest, or random for mock/demo
   const trendingCampaigns = campaigns?.slice(0, 3) ?? [];
 
   return (
-    <>
-      <section className="w-full bg-gradient-to-br from-[#181824]/80 via-[#22223f]/90 to-[#13131a]/95 rounded-2xl shadow mb-10 py-12 px-2 md:px-12 flex flex-col items-center justify-center text-center min-h-[260px]">
-        <h1 className="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-[#03dac5] via-[#6F01Ec] to-[#03dac5] text-transparent bg-clip-text mb-6 dark:text-white">Empower change with transparency</h1>
-        <p className="text-lg md:text-xl text-gray-700 dark:text-[#e4e4e7] mb-6">
+    <div className="mt-[200px] min-h-screen w-full relative">
+      <div className=" flex flex-col items-center justify-center text-center">
+        <div className="text-4xl md:text-5xl font-extrabold text mb-6 dark:text-white uppercase">Empower change with transparency</div>
+        <p className="text-lg md:text-xl text-gray-700 dark:text-[#e4e4e7] mb-10 mt-4 font-semibold">
           Fund projects that matter — powered by blockchain trust.
         </p>
         <CustomButton
           btnType="button"
           title="Create Campaign"
-          styles="bg-[#6F01Ec] text-white px-8 py-3 rounded-lg !font-semibold text-lg shadow-lg mb-8"
+          styles="bg-[#6F01Ec] !text-white px-8 py-3 rounded-lg !font-semibold text-lg shadow-lg mb-80"
           handleClick={() => navigate("/create-campaign")}
         />
         <div className="mt-4 mb-1">
@@ -41,13 +41,13 @@ const Home = () => {
             <span className="text-gray-500 dark:text-[#aaa]">No trending campaigns yet.</span>
           )}
         </div>
-      </section>
+      </div>
       <DisplayCampaigns
         title="All Campaigns"
         isLoading={isLoading}
         campaigns={campaigns}
       />
-    </>
+    </div>
   );
 };
 

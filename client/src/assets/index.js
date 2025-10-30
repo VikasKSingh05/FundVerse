@@ -2,7 +2,7 @@ import createCampaign from "./create-campaign.svg";
 import dashboard from "./dashboard.svg";
 import logo from "./logo.png";
 import disconnect from "./disconnect.svg";
-import profile from "./profile.svg";
+import profile from "./profile.svg";  
 import withdraw from "./withdraw.svg";
 import tagType from "./type.svg";
 import search from "./search.svg";
@@ -14,6 +14,7 @@ import moon from "./moon.svg";
 import system from "./system.svg";
 import cross from "./cross.svg";
 import share from "./share.svg";
+import SmartSeva from "./SmartSeva.png";
 
 export {
   tagType,
@@ -32,4 +33,5 @@ export {
   system,
   logo,
   share,
+  SmartSeva,
 };

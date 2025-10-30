@@ -1,21 +1,27 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import { Sidebar, Navbar, Footer } from "./components";
+import { Navbar } from "./components";
 
 const App = () => {
   return (
-    <div className="relative sm:p-8  p-4 bg-[#eaeaea] dark:bg-[#13131a] min-h-screen flex  ">
-      {/* <div className="sm:flex hidden mr-10 relative">
-        <Sidebar />
-      </div> */}
-      <div className="flex justify-between flex-col w-full gap-10">
-        <div className="flex-1 max-sm:w-full  sm:pr-5">
-          <Navbar />
+<div className="min-h-screen w-full bg-black relative">
+  {/* Dark Noise Colored Background */}
+  <div
+    className="absolute inset-0 z-0"
+    style={{
+      background: "#000000",
+      backgroundImage: `
+        radial-gradient(circle at 1px 1px, rgba(139, 92, 246, 0.2) 1px, transparent 0),
+        radial-gradient(circle at 1px 1px, rgba(59, 130, 246, 0.18) 1px, transparent 0),
+        radial-gradient(circle at 1px 1px, rgba(236, 72, 153, 0.15) 1px, transparent 0)
+      `,
+      backgroundSize: "20px 20px, 30px 30px, 25px 25px",
+      backgroundPosition: "0 0, 10px 10px, 15px 5px",
+    }}
+  />
 
-          <Outlet />
-        </div>
-        <Footer />
-      </div>
+      <Navbar />
+      <Outlet />
     </div>
   );
 };
