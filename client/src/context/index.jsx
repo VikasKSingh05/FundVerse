@@ -110,6 +110,7 @@ export const StateContextProvider = ({ children }) => {
         form
       );
       await getCampaigns();
+      await getUserCampaigns(); // update user-specific campaigns right after a global refresh
     } catch (error) {
       toast.error(" Error while creating Campaign, please 🙏🏻 try again", {
         position: "top-right",
@@ -293,6 +294,11 @@ export const StateContextProvider = ({ children }) => {
       id: i,
     }));
     setCampaigns(parsedCampaigns);
+    // Immediately update user campaigns if address exists
+    if (address) {
+      const filteredUser = parsedCampaigns?.filter((c) => c.owner === address);
+      setUserCampaigns(filteredUser);
+    }
     setIsLoading(false);
     console.log("Campaigns from index.jsx", campaigns);
     return parsedCampaigns;

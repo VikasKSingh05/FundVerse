@@ -21,6 +21,9 @@ import {
   Profile,
   UpdateCampaign,
   Withdraw,
+  About,
+  Campaigns,
+  GlobalLeaderboard,
 } from "./pages";
 
 const router = createBrowserRouter([
@@ -55,6 +58,18 @@ const router = createBrowserRouter([
       {
         path: "/disconnect",
         element: <Disconnect />,
+      },
+      {
+        path: "/about",
+        element: <About />,
+      },
+      {
+        path: "/campaigns",
+        element: <Campaigns />,
+      },
+      {
+        path: "/leaderboard",
+        element: <GlobalLeaderboard />,
       },
     ],
   },

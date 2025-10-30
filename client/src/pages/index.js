@@ -5,3 +5,6 @@ export { default as CampaignDetails } from "./CampaignDetails";
 export { default as UpdateCampaign } from "./UpdateCampaign";
 export { default as Withdraw } from "./Withdraw";
 export { default as Disconnect } from "./Disconnect";
+export { default as About } from "./About";
+export { default as Campaigns } from "./Campaigns";
+export { default as GlobalLeaderboard } from "./GlobalLeaderboard";

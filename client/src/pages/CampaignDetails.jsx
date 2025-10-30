@@ -13,6 +13,11 @@ import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
 import { toast } from "react-toastify";
 import { Helmet } from "react-helmet";
 import { share } from "../assets";
+import { ExternalLink } from "lucide-react";
+import Leaderboard from "../components/Leaderboard";
+
+const CHAIN_EXPLORER = "https://sepolia.etherscan.io/address/"; // Use appropriate chain
+
 const CampaignDetails = () => {
   const { campaignId } = useParams();
   const navigate = useNavigate();
@@ -30,6 +35,21 @@ const CampaignDetails = () => {
   const [donators, setDonators] = useState([]);
   const [campaign, setCampaign] = useState([]);
   const [injectMetaTags, setInjectMetaTags] = useState(false);
+  const [eventHistory] = useState([
+    // Demo static event list, replace with ethers.js/real events later
+    {
+      type: "Donation",
+      hash: "0xFakeTxHash1",
+      amount: "0.10 ETH",
+      user: "0xAbc123...789",
+    },
+    {
+      type: "Withdrawal",
+      hash: "0xFakeTxHash2",
+      amount: "0.03 ETH",
+      user: "0xOwner...Abc",
+    },
+  ]);
 
   useEffect(() => {
     if (contract) {
@@ -62,7 +82,6 @@ const CampaignDetails = () => {
         progress: undefined,
         theme: "dark",
       });
-
       setIsLoading(false);
       return;
     }
@@ -77,11 +96,9 @@ const CampaignDetails = () => {
         progress: undefined,
         theme: "dark",
       });
-
       setIsLoading(false);
       return;
     }
-
     try {
       await donate(campaign?.id, amount);
       navigate("/");
@@ -124,16 +141,18 @@ const CampaignDetails = () => {
           theme: "dark",
         }
       );
-
       setIsLoading(false);
       return;
     }
     await deleteCampaign(campaign?.id);
-
     navigate("/");
     setIsLoading(false);
   };
   const remainingDays = daysLeft(campaign?.deadline);
+
+  // Determine the contract address: use campaign.contractAddress (future) or config
+  const contractAddr = campaign?.contractAddress || (window.ethereum?.selectedAddress || "0xYourDemoContractAddress");
+  const etherscanLink = `${CHAIN_EXPLORER}${contractAddr}`;
 
   if (campaigns?.length <= 0) return <Loader />;
   return (
@@ -142,46 +161,60 @@ const CampaignDetails = () => {
         <Helmet>
           <meta property="og:title" content={campaign?.title} />
           <meta property="og:description" content={campaign?.description} />
-          {campaign?.image && (
-            <meta property="og:image" content={campaign?.image} />
-          )}
+          {campaign?.image && <meta property="og:image" content={campaign?.image} />}
         </Helmet>
       )}
       {isLoading && <Loader />}
       <div className="w-full flex md:flex-row flex-col mt-10 gap-[30px]">
         <div className="flex-1 flex-col">
-          <img
-            src={campaign?.image}
-            alt="campaign"
-            className="w-full h-[410px] object-cover rounded-xl "
-          />
+          <img src={campaign?.image} alt="campaign" className="w-full h-[410px] object-cover rounded-xl "/>
           <div className="relative w-full h-[5px] bg-[#e5e5e5] dark:bg-[#3a3a43] mt-2">
-            <div
-              className="absolute h-full bg-[#6F01Ec]"
-              style={{
-                width: `${calculateBarPercentage(
-                  campaign?.target,
-                  campaign?.amountCollected
-                )}%`,
-                maxWidth: "100%",
-              }}
-            ></div>
+            <div className="absolute h-full bg-[#6F01Ec]" style={{width: `${calculateBarPercentage(campaign?.target, campaign?.amountCollected)}%`, maxWidth: "100%"}}></div>
+          </div>
+          {/* Etherscan button */}
+          <div className="mt-4 flex flex-row items-center gap-3">
+            <a href={etherscanLink} target="_blank" rel="noopener noreferrer" className="flex items-center px-5 py-2 glass-card bg-[#22223f]/80 dark:bg-[#262647]/90 text-[#03dac5] rounded-md font-semibold shadow hover:bg-[#25243f] hover:text-[#6F01Ec] transition-colors">
+              <ExternalLink className="w-4 h-4 mr-2" /> View On Etherscan
+            </a>
           </div>
         </div>
-
         <div className="flex md:w-[150px] w-full md:flex-wrap sm:flex-row flex-col justify-between sm:items-start items-center gap-[30px]">
-          <CountBox
-            title="Days Left"
-            value={remainingDays == 0 ? "Ended" : remainingDays.toString()}
-          />
-          <CountBox
-            title={`Raised of ${campaign?.target}`}
-            value={campaign?.amountCollected}
-          />
+          <CountBox title="Days Left" value={remainingDays == 0 ? "Ended" : remainingDays.toString()} />
+          <CountBox title={`Raised of ${campaign?.target}`} value={campaign?.amountCollected} />
           <CountBox title="Total Backers" value={donators?.length} />
         </div>
       </div>
-
+      {/* Blockchain Transparency section */}
+      <section className="my-8 glass-card bg-[#191927]/80 dark:bg-[#13131a]/90 p-6 rounded-xl max-w-3xl">
+        <h2 className="text-lg font-bold text-[#03dac5] mb-2">Blockchain Transparency</h2>
+        <p className="text-gray-400 text-sm mb-3">All donations and withdrawals are public events on the blockchain. You can verify every transaction by Campaign ID or view campaign activity history live.</p>
+        <div className="overflow-x-auto">
+          <table className="w-full text-xs text-left">
+            <thead>
+              <tr className="text-[#6F01Ec] font-semibold">
+                <th>Type</th>
+                <th>User</th>
+                <th>Amount</th>
+                <th>Txn Hash</th>
+              </tr>
+            </thead>
+            <tbody>
+              {eventHistory.map((evt) => (
+                <tr key={evt.hash} className="hover:bg-[#2c2f32]/20 transition">
+                  <td>{evt.type}</td>
+                  <td>{evt.user}</td>
+                  <td>{evt.amount}</td>
+                  <td>
+                    <a href={`https://sepolia.etherscan.io/tx/${evt.hash}`} target="_blank" rel="noopener noreferrer" className="text-[#03dac5] underline inline-flex items-center">View <ExternalLink className="w-3 h-3 ml-1" /></a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+      {/* Leaderboard section */}
+      <Leaderboard global={false} />
       <div className="mt-16 flex lg:flex-row flex-col gap-5">
         <div className="flex-[2] flex flex-col gap-[40px]">
           <div>

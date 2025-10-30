@@ -1,8 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { tagType } from "../assets";
 import { daysLeft } from "../utils";
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
+import { Tag } from "lucide-react";
+import { motion } from "framer-motion";
 
 const FundCard = ({
   id,
@@ -23,8 +24,12 @@ const FundCard = ({
     navigate(`/campaign-details/${id}`);
   };
   return (
-    <div
-      className="sm:w-[288px] w-full rounded-[15px] bg-[#f2f2f2] dark:bg-[#1c1c24] cursor-pointer shadow-md hover:scale-95 focus:scale-105 transition-transform duration-300"
+    <motion.div
+      initial={{opacity: 0, y: 30}}
+      animate={{opacity: 1, y: 0}}
+      whileHover={{scale: 0.97, boxShadow: "0 8px 32px #03dac533"}}
+      transition={{duration: 0.6, ease: "easeOut"}}
+      className="sm:w-[288px] w-full rounded-[15px] bg-[#f2f2f2]/70 dark:bg-[#1c1c24]/80 cursor-pointer shadow-md glass-card transition-transform duration-300"
       onClick={handleClick || handleNavigateDetails}
     >
       <img
@@ -34,11 +39,7 @@ const FundCard = ({
       />
       <div className="flex flex-col p-4 ">
         <div className="flex flex-row items-center mb-[18px] ">
-          <img
-            src={tagType}
-            alt="tag"
-            className="w-[17px] h-[17px] object-contain "
-          />
+          <Tag className="w-[17px] h-[17px] text-[#6F01Ec]" />
           <p className="ml-[12px] mt-[2px] font-epilogue font-medium text-[12px] h-[17px] text-[#4d4d4d] dark:text-[#808191] ">
             {category}
           </p>
@@ -90,7 +91,7 @@ const FundCard = ({
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
