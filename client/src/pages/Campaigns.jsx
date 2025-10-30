@@ -6,6 +6,30 @@ const getUnique = (array, key) => {
   return [...new Set(array?.map(item => item[key]))];
 };
 
+const normalize = (s) => (s || "").toLowerCase().replace(/\s+/g, " ").trim();
+const isMeaningfulTitle = (titleRaw) => {
+  if (typeof titleRaw !== "string") return false;
+  const title = titleRaw.trim();
+  if (title.length < 3) return false;
+  if (/https?:\/\//i.test(title)) return false;
+  if (!/[a-zA-Z].*[a-zA-Z]/.test(title)) return false;
+  if (!/[aeiou]/i.test(title)) return false;
+  const digits = (title.match(/\d/g) || []).length;
+  if (digits / title.length > 0.3) return false;
+  const badWords = /^(test|testing|asdf|qwer|xxxx|aaaa|lorem|ipsum|na|untitled|sample|demo)$/i;
+  if (badWords.test(title)) return false;
+  const words3plus = (title.match(/\b[a-zA-Z]{3,}\b/g) || []).length;
+  if (words3plus < 2) return false;
+  if (!/[a-zA-Z0-9]/.test(title)) return false;
+  return true;
+};
+const isValidCampaign = (c) => {
+  const hasTitle = isMeaningfulTitle(c?.title);
+  const hasDesc = typeof c?.description === "string" && c.description.trim().length > 10;
+  const hasImage = typeof c?.image === "string" && /^https?:\/\//.test(c.image) && /(\.(png|jpg|jpeg|gif|webp)$)/i.test(c.image);
+  return hasTitle && hasDesc && hasImage;
+};
+
 const Campaigns = () => {
   const { campaigns, isLoading } = useStateContext();
   const [filters, setFilters] = useState({
@@ -17,12 +41,37 @@ const Campaigns = () => {
   const owners = getUnique(campaigns, "owner");
   const categories = getUnique(campaigns, "category");
 
-  let filtered = [...(campaigns || [])];
-  if (filters.owner) filtered = filtered.filter(c => c.owner === filters.owner);
-  if (filters.category) filtered = filtered.filter(c => c.category === filters.category);
-  if (filters.sort === "Goal: High to Low") filtered.sort((a, b) => Number(b.target)-Number(a.target));
-  else if (filters.sort === "Goal: Low to High") filtered.sort((a, b) => Number(a.target)-Number(b.target));
-  else if (filters.sort === "Latest") filtered.sort((a, b) => new Date(b.deadline) - new Date(a.deadline));
+  // Selection logic: same 9 as Home
+  const requestedTitles = [
+    "Tree Plantation Programme",
+    "The Dream of a Better Tomorrow",
+    "Funds for girl education",
+    "Palestine : Help Us",
+    "Animals Shaving",
+    "Hospital bill",
+    "Education aid",
+  ].map(normalize);
+
+  const validCampaigns = (campaigns || []).filter(isValidCampaign);
+  const selectedMap = new Map();
+  const selectedExact = [];
+  for (const req of requestedTitles) {
+    const found = validCampaigns.find(
+      (c) => normalize(c.title) === req || normalize(c.title).includes(req)
+    );
+    if (found && !selectedMap.has(found.id)) {
+      selectedMap.set(found.id, true);
+      selectedExact.push(found);
+    }
+  }
+  const remaining = validCampaigns.filter((c) => !selectedMap.has(c.id));
+  for (let i = remaining.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [remaining[i], remaining[j]] = [remaining[j], remaining[i]];
+  }
+  const needed = Math.max(0, 9 - selectedExact.length);
+  const filler = remaining.slice(0, needed);
+  const finalCampaigns = [...selectedExact, ...filler].slice(0, 9);
 
   return (
     <div className="max-w-5xl mx-auto p-4 min-h-[70vh]">
@@ -55,7 +104,7 @@ const Campaigns = () => {
           <CustomButton btnType="link" title="Create Campaign" styles="bg-[#6F01Ec] text-white px-6 py-2 text-base rounded shadow" handleClick={() => window.location = '/create-campaign'} />
         </div>
       </div>
-      <DisplayCampaigns title="Campaigns" isLoading={isLoading} campaigns={filtered} />
+      <DisplayCampaigns title="Campaigns" isLoading={isLoading} campaigns={finalCampaigns} />
     </div>
   );
 };
