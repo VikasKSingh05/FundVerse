@@ -12,3 +12,4 @@ export { default as WithdrawCard } from "./WithdrawCard";
 export { default as Icon } from "./Icon";
 export { default as ConnectWalletModal } from "./ConnectWalletModal";
 export { default as Leaderboard } from "./Leaderboard";
+export { default as ProtectedRoute } from "./ProtectedRoute";

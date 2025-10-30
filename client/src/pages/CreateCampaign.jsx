@@ -5,6 +5,7 @@ import { useStateContext } from "../context";
 import { money } from "../assets";
 import { CustomButton, FormField, Loader } from "../components";
 import { checkIfImage } from "../utils";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 const CreateCampaign = () => {
   const navigate = useNavigate();
@@ -43,8 +44,9 @@ const CreateCampaign = () => {
     });
   };
   return (
-    <div className=" bg-[#f2f2f2] dark:bg-[#1c1c24] flex justify-center items-center flex-col rounded-xl sm:p-10 p-4 shadow-md">
-      {isLoading && <Loader />}
+    <ProtectedRoute>
+      <div className=" bg-[#f2f2f2] dark:bg-[#1c1c24] flex justify-center items-center flex-col rounded-xl sm:p-10 p-4 shadow-md">
+        {isLoading && <Loader />}
       <div className="flex justify-center items-center p-[16px] sm:min-w-[380px] bg-[#e5e5e5] dark:bg-[#3a3a43] rounded-xl">
         <h1 className="font-epilogue font-bold sm:text-[25px] text-lg leading-[38px] text-[#414A4C] dark:text-white">
           Start a Campaign
@@ -128,6 +130,7 @@ const CreateCampaign = () => {
         </div>
       </form>
     </div>
+    </ProtectedRoute>
   );
 };
 

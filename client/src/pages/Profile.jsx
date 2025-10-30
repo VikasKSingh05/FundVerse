@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useStateContext } from "../context";
 import { DisplayCampaigns } from "../components";
+import ProtectedRoute from "../components/ProtectedRoute";
 
 const Profile = () => {
   const { address, contract, getUserCampaigns, userCampaigns } = useStateContext();
@@ -25,11 +26,13 @@ const Profile = () => {
   }, [contract, address]); // ✅ removed 'campaigns' to prevent re-fetch loop
 
   return (
-    <DisplayCampaigns
-      title="My Campaigns"
-      isLoading={loadingUser}
-      campaigns={userCampaigns}
-    />
+    <ProtectedRoute>
+      <DisplayCampaigns
+        title="My Campaigns"
+        isLoading={loadingUser}
+        campaigns={userCampaigns}
+      />
+    </ProtectedRoute>
   );
 };
 

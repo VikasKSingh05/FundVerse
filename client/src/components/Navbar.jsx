@@ -4,6 +4,7 @@ import { useStateContext } from "../context";
 // import { logo } from "../assets";
 import {SmartSeva} from "../assets";
 import Jazzicon, { jsNumberForAddress } from "react-jazzicon";
+import ConnectWalletModal from "./ConnectWalletModal";
 
 const CENTER_LINKS = [
   { name: "Home", route: "/" },
@@ -14,6 +15,7 @@ const CENTER_LINKS = [
 const Navbar = () => {
   const { address, disconnect, connectMetamask } = useStateContext();
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showWalletModal, setShowWalletModal] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const dropdownRef = useRef();
 
@@ -80,21 +82,25 @@ const Navbar = () => {
               >
                 My Profile
               </NavLink>
-              <button
+              {/* <button
                 className={`w-full py-2 px-3 font-semibold glass-card transition rounded text-center dark:text-white ${address ? 'hover:bg-[#e00b0b] hover:text-white' : 'hover:bg-[#03dac5] hover:text-black'}`}
                 onClick={() => {
                   setShowDropdown(false);
                   setTimeout(() => {
                     if (address) disconnect();
-                    else connectMetamask();
+                    else setShowWalletModal(true);
                   }, 150);
                 }}
               >
                 {address ? 'Disconnect' : 'Connect'}
-              </button>
+              </button> */}
             </div>
           </div>
         )}
+        <ConnectWalletModal 
+          isOpen={showWalletModal} 
+          onClose={() => setShowWalletModal(false)} 
+        />
       </div>
     </nav>
   );
