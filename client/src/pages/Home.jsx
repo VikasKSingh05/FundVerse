@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useStateContext } from "../context";
 import { DisplayCampaigns, CustomButton, ConnectWalletModal } from "../components";
 import { ChevronDown } from "lucide-react";
+import { SmartSeva } from "../assets";
+
 
 const isMeaningfulTitle = (titleRaw) => {
   if (typeof titleRaw !== "string") return false;
@@ -47,7 +49,6 @@ const Home = () => {
 
   const validCampaigns = (campaigns || []).filter(isValidCampaign).slice(0, 9);
 
-  // First pick requested titles in the given order if available
   const selectedMap = new Map();
   const selectedExact = [];
   for (const req of requestedTitles) {
@@ -60,9 +61,7 @@ const Home = () => {
     }
   }
 
-  // Fill with two random others (not already selected) to make total 9
   const remaining = validCampaigns.filter((c) => !selectedMap.has(c.id));
-  // Shuffle remaining
   for (let i = remaining.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [remaining[i], remaining[j]] = [remaining[j], remaining[i]];
@@ -113,29 +112,70 @@ const Home = () => {
         </div>
         <ChevronDown className="w-12 h-12 text-[#6F01Ec] mt-40 animate-bounce mb-40" />
         <div className="mt-4 mb-1">
-          <div className="text-4xl font-bold text-[#03dac5] mb-20 uppercase">Trending Campaigns</div>
-          {trendingCampaigns.length > 0 ? (
-            <div className="flex flex-wrap gap-6 justify-center">
-              {trendingCampaigns.map((c) => (
-                <div key={c.id} className="glass-card bg-[#24243e]/90 dark:bg-[#191927]/95 p-4 rounded-xl min-w-[260px] max-w-xs w-full shadow-lg">
-                  <img src={c.image} alt={c.title} className="rounded-lg w-full h-32 object-cover mb-2" />
-                  <div className="font-semibold text-lg text-gray-900 dark:text-[#e4e4e7] mb-1">{c.title}</div>
-                  <div className="text-xs text-[#03dac5]">by {c.name}</div>
-                  <div className="mt-2 text-sm text-gray-600 dark:text-gray-300 truncate">{c.description?.slice(0, 60)}...</div>
-                  <CustomButton title="Details" btnType="button" styles="bg-[#03dac5] mt-4 w-full text-sm text-black shadow" handleClick={() => navigate(`/campaign-details/${c.id}`)} />
-                </div>
-              ))}
+
+
+      {/* About Section */}
+      <section className=" max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="rounded-2xl p-8 bg-white/10 dark:bg-[#1f2033]/60 border border-white/10 backdrop-blur-md shadow-xl">
+          <div className="flex flex-col lg:flex-row items-center gap-8">
+            <img src={SmartSeva} alt="SmartSeva" className="w-28 h-28 rounded-2xl shadow-lg" />
+            <div>
+              <div className="text-4xl font-extrabold bg-gradient-to-r from-[#6F01Ec] via-[#9b5cf6] to-[#03dac5] bg-clip-text text-transparent mb-10">About SmartSeva</div>
+              <div className="text-gray-700 dark:text-gray-300 leading-relaxed text-xl mb-10">
+                SmartSeva is a transdivarent, blockchain-powered crowdfunding platform. Create, fund, and track campaigns with on-chain visibility,
+                auditable histories, and a community-first model. Every donation and withdrawal is recorded on-chain for trustless verification.
+              </div>
             </div>
-          ) : (
-            <span className="text-gray-500 dark:text-[#aaa]">No trending campaigns yet.</span>
-          )}
+          </div>
+
+          {/* Simple illustrative charts */}
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="rounded-xl p-5 bg-white/20 dark:bg-white/5 border border-white/10">
+              <div className="text-[#03dac5] font-semibold mb-2 text-lg">Donations Over Time</div>
+              <div className="h-24 flex items-end gap-2">
+                {[20,40,30,60,50,70,90].map((h,i)=> (
+                  <div key={i} className="w-6 bg-gradient-to-t from-[#6F01Ec] to-[#03dac5] rounded" style={{height:`${h}%`}}></div>
+                ))}
+              </div>
+            </div>
+            <div className="rounded-xl p-5 bg-white/20 dark:bg-white/5 border border-white/10">
+              <div className="text-[#03dac5] font-semibold mb-2 text-lg">Top Categories</div>
+              <ul className=" text-gray-700 dark:text-gray-300 space-y-1">
+                <li>• Education</li>
+                <li>• Health</li>
+                <li>• Environment</li>
+                <li>• Humanitarian</li>
+              </ul>
+            </div>
+            <div className="rounded-xl p-5 bg-white/20 dark:bg-white/5 border border-white/10">
+              <div className="text-[#03dac5] font-semibold mb-2 text-lg">Transparency</div>
+              <p className=" text-gray-700 dark:text-gray-300">All activity is verifiable on-chain. Visit Etherscan from any campaign to review its transaction history.</p>
+            </div>
+          </div>
         </div>
-      </div>
-      {/* <DisplayCampaigns
-        title="All Campaigns"
-        isLoading={isLoading}
-        campaigns={validCampaigns}
-      /> */}
+      </section>
+
+                {/* Trending Campaigns */}
+                  <div className="text-4xl font-bold text-[#ffffff] mb-20 uppercase mt-60">Trending Campaigns</div>
+                  {trendingCampaigns.length > 0 ? (
+                    <div className="flex flex-wrap gap-6 justify-center">
+                      {trendingCampaigns.map((c) => (
+                        <div key={c.id} className="glass-card bg-[#24243e]/90 dark:bg-[#191927]/95 p-4 rounded-xl min-w-[260px] max-w-xs w-full shadow-lg">
+                          <img src={c.image} alt={c.title} className="rounded-lg w-full h-32 object-cover mb-2" />
+                          <div className="font-semibold text-lg text-gray-900 dark:text-[#e4e4e7] mb-1">{c.title}</div>
+                          <div className="text-xs text-[#03dac5]">by {c.name}</div>
+                          <div className="mt-2 text-sm text-gray-600 dark:text-gray-300 truncate">{c.description?.slice(0, 60)}...</div>
+                          <CustomButton title="Details" btnType="button" styles="bg-[#6F01Ec] mt-4 w-full text-sm text-white" handleClick={() => navigate(`/campaign-details/${c.id}`)} />
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <span className="text-gray-500 dark:text-[#aaa]">No trending campaigns yet.</span>
+                  )}
+                </div>
+              </div>
+      {/* All Campaigns (optional, can be added back) */}
+      {/* <DisplayCampaigns title="All Campaigns" isLoading={isLoading} campaigns={finalCampaigns} /> */}
     </div>
   );
 };
